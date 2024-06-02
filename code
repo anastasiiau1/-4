@@ -1,0 +1,44 @@
+import fedot
+import bamt
+import asid
+
+# Разведочный анализ данных и построение моделей временных рядов с FEDOT
+from fedot.api.main import Fedot
+
+# Пример загрузки и подготовки данных
+data = load_energy_data()
+
+# Функция для обучения модели с помощью FEDOT
+def train_fedot_model(data):
+    task = 'forecasting'
+    model = Fedot(problem=task, timeout=120)
+    model.fit(features=data['features'], target=data['target'])
+    return model
+
+fedot_model = train_fedot_model(data)
+
+# Строим байесовские модели с использованием BAMT
+from bamt.api import BAMT
+
+# Пример загрузки структуры модели и данных
+structure, data = load_bamt_structure_and_data()
+
+# Создание и обучение модели
+bamt_model = BAMT(structure=structure)
+bamt_model.fit(data)
+
+# Оптимизация распределения ресурсов с использованием ASID
+from asid.api import ResourceOptimizer
+
+# Пример определения параметров оптимизации
+resources = {'solar': solar_data, 'wind': wind_data, 'diesel': diesel_data}
+optimizer = ResourceOptimizer(resources)
+
+# Оптимизация использования ресурсов
+optimized_plan = optimizer.optimize()
+
+# Вывод результатов:
+print("Optimized energy distribution plan:", optimized_plan)
+print("F
+orecasted energy production (FEDOT):", fedot_model.predict())
+print("Uncertainty analysis (BAMT):", bamt_model.predict())
